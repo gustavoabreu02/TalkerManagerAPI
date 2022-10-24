@@ -1,7 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readTalkersData } = require('./Utils/fsUtils');
-const { emailValidation, passwordValidation } = require('./Middlewares/validations');
+const { readTalkersData, writheNewTalkerData } = require('./Utils/fsUtils');
+const {
+  emailValidation,
+  passwordValidation,
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation,
+} = require('./Middlewares/validations');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,9 +49,25 @@ app.get('/talker/:id', async (request, response) => {
   });
 });
 
-app.post('/login', emailValidation, passwordValidation, (_req, res) => 
-  res.status(200).json({ token: generateToken() }));
+app.post('/login', emailValidation, passwordValidation, (_request, response) => 
+  response.status(200).json({ token: generateToken() }));
 
+  app.post('/talker', 
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation, 
+  async (request, response) => {
+  const talkersData = await readTalkersData();
+  const talkers = { ...request.body };
+
+  const newTalker = { ...talkers, id: talkersData.length + 1 };
+  writheNewTalkerData(newTalker);
+
+  response.status(201).json(newTalker);
+});
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
