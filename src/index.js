@@ -25,7 +25,7 @@ app.get('/talker/:id', async (request, response) => {
     return response.status(HTTP_OK_STATUS).json(talker);
   }
   return response.status(404).json({
-    "message": "Pessoa palestrante não encontrada"
+    message: 'Pessoa palestrante não encontrada',
   });
 });
 
