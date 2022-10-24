@@ -8,6 +8,16 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
+const generateToken = () => {
+  const caracteres = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let token = '';
+  // link de onde aprendi para gerar o token https://attacomsian.com/blog/javascript-generate-random-string
+  for (let i = 0; i < 16; i += 1) {
+    token += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+  }
+  return token;
+};
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/talker', async (_request, response) => {
   const talkers = await readTalkersData();
@@ -28,6 +38,10 @@ app.get('/talker/:id', async (request, response) => {
     message: 'Pessoa palestrante não encontrada',
   });
 });
+
+app.post('/login', (_request, response) => response.status(HTTP_OK_STATUS).json({
+  token: generateToken(),
+}));
 
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
