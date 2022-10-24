@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { readTalkersData } = require('./Utils/fsUtils');
 
 const app = express();
 app.use(bodyParser.json());
@@ -8,6 +9,14 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
+app.get('/talker', async (_request, response) => {
+  const talkers = await readTalkersData();
+  if (talkers === []) {
+    return response.status(HTTP_OK_STATUS).json([]);
+  }
+  return response.status(HTTP_OK_STATUS).json(talkers);
+});
+
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
