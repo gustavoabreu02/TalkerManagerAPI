@@ -1,6 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readTalkersData, writheNewTalkerData, updateTalkerData } = require('./Utils/fsUtils');
+const { readTalkersData,
+  writheNewTalkerData,
+  updateTalkerData,
+  deleteTalkerData,
+} = require('./Utils/fsUtils');
+
 const {
   emailValidation,
   passwordValidation,
@@ -80,8 +85,15 @@ app.put('/talker/:id',
   const { id } = request.params;
   const updatedTalker = { id: +id, ...request.body };
 
-  updateTalkerData(+id, request.body);
+  await updateTalkerData(+id, request.body);
   response.status(200).json(updatedTalker);
+});
+
+app.delete('/talker/:id', tokenValidation, async (req, res) => {
+  const { id } = req.params;
+
+  await deleteTalkerData(+id);
+  res.status(204).end();
 });
 
 app.get('/', (_request, response) => {
