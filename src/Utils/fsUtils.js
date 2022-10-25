@@ -24,7 +24,27 @@ async function writheNewTalkerData(newTalker) {
   }
 }
 
+async function updateTalkerData(id, updatedTalkerData) {
+    const oldTalkers = await readTalkersData();
+    const updatedTalker = { id, ...updatedTalkerData };
+    const updatedTalkers = oldTalkers.reduce((talkersList, currentTalker) => {
+        if (currentTalker.id === updatedTalker.id) {
+            return [...talkersList, updatedTalker];
+        }
+        return [...talkersList, currentTalker];
+    }, []);
+
+    const updatedData = JSON.stringify(updatedTalkers);
+
+    try {
+      await fs.writeFile(path.resolve(__dirname, TALKER_DATA_PATH), updatedData);
+    } catch (error) {
+        console.error(`Erro na leitura do arquivo: ${error}`);
+    }
+}
+
 module.exports = {
     readTalkersData,
     writheNewTalkerData,
+    updateTalkerData,
 };
