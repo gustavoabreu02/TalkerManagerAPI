@@ -42,6 +42,19 @@ app.get('/talker', async (_request, response) => {
   return response.status(HTTP_OK_STATUS).json(talkers);
 });
 
+app.get('/talker/search', tokenValidation, async (request, response) => {
+  const talkers = await readTalkersData()
+  const { q } = request.query;
+
+  const talkerSearch = talkers.filter((value) => value.name.includes(q));
+
+  if (!q) {
+    response.status(200).end();
+  }
+
+  response.status(200).json(talkerSearch);
+});
+
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
   const talkers = await readTalkersData();
@@ -89,12 +102,13 @@ app.put('/talker/:id',
   response.status(200).json(updatedTalker);
 });
 
-app.delete('/talker/:id', tokenValidation, async (req, res) => {
-  const { id } = req.params;
+app.delete('/talker/:id', tokenValidation, async (request, response) => {
+  const { id } = request.params;
 
   await deleteTalkerData(+id);
-  res.status(204).end();
+  response.status(204).end();
 });
+
 
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
