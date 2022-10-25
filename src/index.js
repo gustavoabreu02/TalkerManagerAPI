@@ -80,7 +80,7 @@ app.put('/talker/:id',
   const { id } = request.params;
   const updatedTalker = { id: +id, ...request.body };
 
-  updateTalkerData(+id, request.body)
+  updateTalkerData(+id, request.body);
   response.status(200).json(updatedTalker);
 });
 
