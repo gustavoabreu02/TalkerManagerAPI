@@ -43,7 +43,7 @@ app.get('/talker', async (_request, response) => {
 });
 
 app.get('/talker/search', tokenValidation, async (request, response) => {
-  const talkers = await readTalkersData()
+  const talkers = await readTalkersData();
   const { q } = request.query;
 
   const talkerSearch = talkers.filter((value) => value.name.includes(q));
@@ -108,7 +108,6 @@ app.delete('/talker/:id', tokenValidation, async (request, response) => {
   await deleteTalkerData(+id);
   response.status(204).end();
 });
-
 
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
